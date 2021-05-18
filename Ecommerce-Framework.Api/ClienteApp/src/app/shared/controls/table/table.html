@@ -1,0 +1,189 @@
+<div class="card">
+  <div class="card-header border-0">
+    <div class="col-12 text-right">
+      <a [routerLink]="" (click)="onFilterClear()" *ngIf="this.pagedList.filter?.length > 0">
+        <ngb-icon name="eraser"></ngb-icon> Limpar filtros
+      </a>
+    </div>
+  </div>
+  <table class="table table-sm table-striped" resizeObserver (resize)="onResize($event)">
+
+    <thead class="thead-light">
+      <!-- Titulo -->
+      <tr>
+        <!-- Responsividade -->
+        <th *ngIf="hasColumnHidden()">
+        </th>
+        <!-- Colunas -->
+        <ng-container *ngFor="let col of columns">
+          <ng-container *ngIf="!col.hidden">
+
+            <ng-container *ngIf="col.sortable == null || col.sortable">
+              <th scope="col" class="sort" sortable="{{col.fieldName}}" (sort)="onSort($event)"
+                [direction]="setDirection(col.fieldName)" [ngStyle]="prepareColumn(col)">
+                {{col.title}}
+              </th>
+            </ng-container>
+
+            <ng-container *ngIf="col.sortable == false">
+              <th scope="col" class="sort" [ngStyle]="prepareColumn(col)"> {{col.title}}
+              </th>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+
+        <!-- Ações -->
+        <ng-container *ngIf="actions?.length > 0 && !disabledActions">
+          <ng-container *hasClaim="actions[0]?.claimKey">
+            <th style="max-width: 150px;">Opções</th>
+          </ng-container>
+        </ng-container>
+      </tr>
+
+      <!-- Filtros -->
+      <tr *ngIf="!disabledFilters && hasFilters() && pagedList.items">
+        <th *ngIf="hasColumnHidden()">
+        </th>
+
+        <ng-container *ngFor="let col of columns">
+          <ng-container *ngIf="!col.hidden">
+            <th>
+              <ng-container *ngIf="col.filterable == null || col.filterable">
+                <ng-container *ngIf="!isFilterCheckbox(col) && !isFilterSelect(col) && !isBool(col)">
+                  <input class="form-control form-control-sm" type="text" (change)="filtrarContendo(col, $event)"
+                    [placeholder]="'Filtrar por ' + col.title">
+                </ng-container>
+                <ng-container *ngIf="isFilterSelect(col) && !isBool(col)">
+                  <select class="form-control form-control-sm" (change)="filtrarIgual(col, $event)">
+                    <option [value]="null">Filtrar</option>
+                    <option *ngFor="let item of col.filterData" [ngValue]="prepareFilterItemValue(col, item)">
+                      {{prepareFilterItemText(col, item)}}
+                    </option>
+                  </select>
+                </ng-container>
+                <ng-container *ngIf="isBool(col)">
+                  <select class="form-control form-control-sm" (change)="filtrarIgual(col, $event)">
+                    <option [value]="null">Filtrar</option>
+                    <option [value]="true">Sim</option>
+                    <option [value]="false">Não</option>
+                  </select>
+                </ng-container>
+              </ng-container>
+            </th>
+          </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="actions?.length > 0 && !disabledActions">
+          <ng-container *hasClaim="actions[0]?.claimKey">
+            <th></th>
+          </ng-container>
+        </ng-container>
+      </tr>
+
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let item of pagedList?.items; let i = index">
+
+        <tr [ngStyle]="prepareDataRow(item)">
+
+          <!-- responsividade -->
+          <td *ngIf="hasColumnHidden()">
+            <span (click)="expandedElement[i] = !expandedElement[i]"
+              [ngClass]="[expandedElement[i] ?  'active' : 'inActive']" class="btnToggleExpand"></span>
+          </td>
+
+          <!-- Colunas -->
+          <ng-container *ngFor="let col of columns">
+            <ng-container *ngIf="!col.hidden">
+              <td scope="row">
+                <div [innerHTML]="prepareValue(col, item)"></div>
+              </td>
+            </ng-container>
+          </ng-container>
+
+          <!-- Ações -->
+          <ng-container *ngIf="actions?.length > 0 && !disabledActions">
+            <ng-container *hasClaim="actions[0]?.claimKey">
+
+              <td class="text-left">
+
+                <!-- Dropdown -->
+                <div ngbDropdown container="body" placement="bottom-right" *ngIf="groupActions" class="dropdown">
+                  <button class="btn btn-primary btn-sm" ngbDropdownToggle attr.data-toggle="dropdown"
+                    [attr.aria-expanded]="false" [attr.aria-haspopup]="true">
+                    <ngb-icon name="ellipsis-v"></ngb-icon>
+                  </button>
+                  <div ngbDropdownMenu [class.dropdown-menu-right]="true" attr.aria-labelledby="option_{{i}}">
+                    <ng-container *ngFor="let action of actions">
+                      <ng-container *hasClaim="action.claimKey + ':' + action.claimValue">
+                        <a ngbDropdownItem *ngIf="prepareAction(action, item, i) && action.routerLink"
+                          [routerLink]="prepareRouter(action, item)"
+                          [ngbTooltip]="action.title ? action.title: 'opção'">
+                          <ngb-icon [name]="action.icon ? action.icon : 'cog'" class="mr-2"></ngb-icon>
+                          {{action.title}}
+                        </a>
+                        <a ngbDropdownItem *ngIf="prepareAction(action, item, i) && !action.routerLink"
+                          (click)="onActionClick(action, item, i)" [ngbTooltip]="action.title ? action.title: 'opção'">
+                          <ngb-icon [name]="action.icon ? action.icon : 'cog'" class="mr-2"></ngb-icon>
+                          {{action.title}}
+                        </a>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                </div>
+
+                <!-- Links -->
+                <div *ngIf="!groupActions">
+                  <ng-container *ngFor="let action of actions">
+                    <ng-container *hasClaim="action.claimKey + ':' + action.claimValue">
+                      <a class="btn btn-sm btn-success" *ngIf="prepareAction(action, item, i) && action.routerLink"
+                        [routerLink]="prepareRouter(action, item)" [ngbTooltip]="action.title ? action.title: 'opção'">
+                        <ngb-icon [name]="action.icon ? action.icon : 'cog'" class="mr-2"></ngb-icon> {{action.title}}
+                      </a>
+                      <a class="btn btn-sm btn-info text-white"
+                        *ngIf="prepareAction(action, item, i) && !action.routerLink" (click)="onActionClick(action, item, i)"
+                        [ngbTooltip]="action.title ? action.title: 'Selecionar'">
+                        <ngb-icon [name]="action.icon ? action.icon : 'cog'" class="mr-2"></ngb-icon> {{action.title}}
+                      </a>
+                    </ng-container>
+                  </ng-container>
+                </div>
+              </td>
+            </ng-container>
+          </ng-container>
+        </tr>
+
+        <!-- Detalhes -->
+        <tr [ngStyle]="prepareDataRow(item)" *ngIf="expandedElement[i]">
+          <td [attr.colSpan]="columns.length" scope="row">
+            <ng-container *ngFor="let col of columns">
+              <ng-container *ngIf="col.hidden">
+                <strong>{{col.title}}: </strong><span [innerHTML]="prepareValue(col, item)"></span><br>
+              </ng-container>
+            </ng-container>
+          </td>
+        </tr>
+      </ng-container>
+
+      <tr *ngIf="pagedList?.recordCount == 0 || pagedList?.items == null">
+        <td class="text-center" [attr.colspan]="columns.length + (actions?.length > 0 ? 1 : 0)">
+          Nenhum registro encontrado.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="card-footer py-4" *ngIf="this.pagedList.pageSize">
+  <nav aria-label="...">
+    <div class="d-flex justify-content-between">
+      <select class="form-control col-1" [(ngModel)]="pagedList.pageSize" (change)="onTableChange()">
+        <option *ngFor="let size of pageSize" [ngValue]="size"> {{size}}
+        </option>
+      </select>
+      <ngb-pagination [collectionSize]="pagedList?.recordCount" [(page)]="pagedList.page"
+        [pageSize]="pagedList.pageSize" [maxSize]="5" [rotate]="true" (pageChange)="onTableChange()">
+      </ngb-pagination>
+    </div>
+  </nav>
+</div>

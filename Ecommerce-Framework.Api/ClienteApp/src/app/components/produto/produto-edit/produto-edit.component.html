@@ -1,0 +1,66 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <fieldset>
+  
+      <!-- Form Name -->
+      <legend>Cadastro de Produto</legend>
+  
+      <!-- Text input-->
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="produto">Nome</label>
+        <div class="col-md-4">
+          <input id="produto" formControlName="produto" name="produto" type="text" placeholder="Digite nome da fruta"
+            class="form-control input-md" required="">
+  
+        </div>
+      </div>
+  
+      <!-- Text input-->
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="descricao">Descrição</label>
+        <div class="col-md-4">
+          <input id="descricao" formControlName="descricao" name="descricao" type="text"
+            placeholder="Descreva as característica da fruta" class="form-control input-md">
+  
+        </div>
+      </div>
+  
+      <!-- Text input-->
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="saldoEstoque">Estoque</label>
+        <div class="col-md-4">
+          <input id="saldoEstoque" formControlName="saldoEstoque" name="saldoEstoque" type="text"
+            placeholder="Digite o saldo em estoque" class="form-control input-md" required="">
+  
+        </div>
+      </div>
+  
+      <!-- Text input-->
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="valor">Valor</label>
+        <div class="col-md-4">
+          <input id="valor" formControlName="valor" name="valor" type="text" placeholder="R$ 00,00"
+            class="form-control input-md" required="">
+  
+        </div>
+      </div>
+  
+      <!-- File Button -->
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="img">Seleciona uma foto</label>
+        <div class="col-md-4">
+          <input id="img" formControlName="img" name="img" class="input-file" type="file">
+        </div>
+      </div>
+  
+      <!-- Button (Double) -->
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="salvar"></label>
+        <div class="col-md-8">
+          <button id="salvar" name="salvar" class="btn btn-primary" [disabled]="form.invalid"> <ngb-icon name="save"></ngb-icon> Salvar</button>
+          <button id="limpar" name="limpar" class="btn btn-danger">Limpar</button>
+        </div>
+      </div>
+  
+    </fieldset>
+  </form>
+  

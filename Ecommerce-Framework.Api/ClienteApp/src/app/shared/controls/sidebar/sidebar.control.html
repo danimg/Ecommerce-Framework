@@ -1,0 +1,127 @@
+<nav class="sidenav navbar navbar-vertical  fixed-left  navbar-expand-xs navbar-light bg-white" id="sidenav-main">
+  <div class="scroll-wrapper ">
+    <div class="sidenav-header d-flex align-items-center">
+      <a class="navbar-brand" [routerLink]="['/']">
+        <img src="assets/gestorlogo.png" class="navbar-brand-img" alt="...">
+      </a>
+
+      <div class="ml-auto">
+        <div class="sidenav-toggler" id="sidenav-toggler" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+          [attr.aria-expanded]="isExpanded" (click)="toggle()">
+          <div class="sidenav-toggler-inner">
+            <i class="sidenav-toggler-line"></i>
+            <i class="sidenav-toggler-line"></i>
+            <i class="sidenav-toggler-line"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="navbar-inner">
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent" [class.show]="isExpanded">
+        <hr>
+        <ul class="navbar-nav">
+          <ng-container *ngFor="let menu of menuLeft; let i = index">
+            <li class="nav-item" *ngIf="!menu.items">
+              <a class="nav-link" [routerLink]="menu.url" routerLinkActive="active">
+                <ngb-icon [name]="menu.icon ? menu.icon : 'cog'" class="mr-2 text-info"></ngb-icon>
+                <span class="nav-link-text">{{menu.title}}</span>
+                <p *ngIf="menu.subtitle">{{menu.subtitle}}</p>
+              </a>
+              <b class="form-text text-muted mt-0 pl-2"> {{menu.subtitle}} </b>
+            </li>
+            <li class="nav-item" *ngIf="menu.items">
+
+              <a class="nav-link collapsed" (click)="onCollapsed(menu.title)" data-toggle="collapse" role="button"
+                aria-expanded="false" [attr.aria-controls]="menu.title">
+                <ngb-icon [name]="menu.icon ? menu.icon : 'cog'" class="mr-2 text-info"></ngb-icon>
+                <span class="nav-link-text">{{menu.title}}</span>
+              </a>
+              <b class="form-text text-muted mt-0 pl-2"> {{menu.subtitle}}</b>
+              <div class="collapse" id="{{menu.title}}" [class.show]="isCollapsed == menu.title">
+                <ul class="nav nav-sm flex-column">
+                  <ng-container *ngFor="let item of menu.items">
+                    <li *ngIf="!item.items">
+                      <a ngbDropdownItem [routerLink]="item.url" routerLinkActive="active " class="nav-link">
+                        <ngb-icon [name]="item.icon ? item.icon : 'cog'" class="mr-2 text-info"></ngb-icon>
+                        <span class="nav-link-text"> {{item.title}}</span>
+
+                        <p *ngIf="item.subtitle">{{item.subtitle}}</p>
+                      </a>
+                    </li>
+                    <li class="nav-item" *ngIf="item.items" ngbDropdown>
+                      <a class="nav-link collapsed" (click)="onCollapsedItem(item.title)" data-toggle="collapse"
+                        role="button" aria-expanded="false" [attr.aria-controls]="item.title">
+                        <ngb-icon [name]="item.icon ? item.icon : 'cog'" class="mr-2 text-info"></ngb-icon>
+                        <span class="nav-link-text"> {{item.title}}</span>
+                      </a>
+                      <b class="form-text text-muted mt-0 pl-2"> {{item.subtitle}}</b>
+                      <div class="collapse" id="{{item.title}}" [class.show]="isCollapsedItem == item.title">
+                        <ul class="nav nav-sm flex-column">
+                          <ng-container *ngFor="let item2 of item.items">
+                            <li class="nav-item" *ngIf="!item2.items">
+                              <a class="nav-link " [routerLink]="item2.url" routerLinkActive="active">
+                                <ngb-icon [name]="item2.icon ? item2.icon : 'cog'" class="mr-2 text-info"></ngb-icon>
+                                <span class="nav-link-text"> {{item2.title}}</span>
+                                <p *ngIf="item.subtitle">{{item2.subtitle}}</p>
+                              </a>
+                            </li>
+                            <li class="nav-item" *ngIf="item2.items" ngbDropdown>
+                              <a class="nav-link collapsed" (click)="onCollapsed2(item2.title)" data-toggle="collapse"
+                                role="button" aria-expanded="false" [attr.aria-controls]="item2.title">
+
+                                <span class="nav-link-text"> {{item2.title}}</span>
+                              </a>
+                              <b class="form-text text-muted mt-0 pl-2"> {{item2.subtitle}}</b>
+                              <div class="collapse" id="{{item2.title}}" [class.show]="isCollapsed2 == item2.title">
+                                <ul class="nav nav-sm flex-column">
+                                  <ng-container *ngFor="let item3 of item2.items">
+                                    <li class="nav-item" *ngIf="!item3.items">
+                                      <a class="nav-link" [routerLink]="item3.url" routerLinkActive="active"
+                                        class="nav-link">
+                                        <span class="nav-link-text"> {{item3.title}}</span>
+                                        <p *ngIf="item2.subtitle">{{item3.subtitle}}</p>
+                                      </a>
+                                    </li>
+                                    <li class="nav-item " *ngIf="item3.items" ngbDropdown>
+                                      <a class="nav-link collapsed  " (click)="onCollapsed3(item3.title)"
+                                        data-toggle="collapse" role="button" aria-expanded="false"
+                                        [attr.aria-controls]="item2.title">
+                                        <span class="nav-link-text"> {{item3.title}}</span>
+                                      </a>
+                                      <b class="form-text text-muted mt-0 pl-2"> {{item3.subtitle}}</b>
+                                      <div class="collapse" id="{{item2.title}}"
+                                        [class.show]="isCollapsed3 == item3.title">
+                                        <ul ngbDropdownMenu class="dropdown-menu">
+                                          <ng-container *ngFor="let item4 of item3.items">
+                                            <li *ngIf="!item4.items">
+                                              <a class="nav-link" [routerLink]="item4.url" routerLinkActive="active"
+                                                class="nav-link">
+                                                {{item4.title}}
+                                                <p *ngIf="item3.subtitle">{{item4.subtitle}}</p>
+                                              </a>
+                                            </li>
+                                          </ng-container>
+                                        </ul>
+                                      </div>
+                                    </li>
+                                  </ng-container>
+                                </ul>
+                              </div>
+                            </li>
+                          </ng-container>
+                        </ul>
+                      </div>
+                    </li>
+                  </ng-container>
+                </ul>
+              </div>
+            </li>
+          </ng-container>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>

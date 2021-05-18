@@ -1,0 +1,51 @@
+<nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom">
+  <div class="pr-3 sidenav-toggler sidenav-toggler-light" data-action="sidenav-pin" data-target="#sidenav-main"
+    id="abreSide">
+    <div class="sidenav-toggler-inner" (click)="toggle()">
+      <i class="sidenav-toggler-line"></i>
+      <i class="sidenav-toggler-line"></i>
+      <i class="sidenav-toggler-line"></i>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav align-items-center ml-md-auto">
+        <li class="nav-item d-xl-none">
+        </li>
+      </ul>
+      <ul class="navbar-nav align-items-center ml-auto ml-md-0">
+        <ng-container *ngFor="let menu of menuRight">
+          <li class="nav-item" *ngIf="!menu.items">
+            <a class="nav-link" [routerLink]="menu.url" routerLinkActive="active">
+              <ngb-icon [name]="menu.icon ? menu.icon : 'circle'" class="mr-2"></ngb-icon>
+              <span class="mb-0 text-sm  font-weight-bold text-white "> {{menu.title}}</span>
+            </a>
+            <span class="mb-0 text-sm  font-weight-bold text-white "> {{menu.subtitle}}</span>
+          </li>
+          <li class="nav-item" *ngIf="menu.items" ngbDropdown>
+            <a class="nav-link mb-0 pb-0" style="cursor: pointer" ngbDropdownToggle role="button">
+              <ngb-icon [name]="menu.icon ? menu.icon : 'circle'" class="mr-2"></ngb-icon>
+              <span class="mb-0 text-sm  font-weight-bold  text-white ">{{menu.title}}</span>
+            </a>
+            <div class="col-12">
+              <p class="mb-0 text-sm  font-weight-bold text-white "> {{menu.subtitle}}</p>
+            </div>
+            <div class="col-12" *ngIf="localAtendimento != '0'">
+              <p class="mb-0">{{localAtendimento}}</p>
+            </div>
+            <div class="col-12" *ngIf="cbo != '0'">
+              <p class="mb-0">{{cbo}}</p>
+            </div>
+            <div ngbDropdownMenu class="dropdown-menu dropdown-menu-right">
+              <a ngbDropdownItem *ngFor="let item of menu.items" [routerLink]="item.url" routerLinkActive="active">
+                <ngb-icon [name]="item.icon ? item.icon : 'circle'" class="mr-2"></ngb-icon>
+                {{item.title}}
+                <p *ngIf="item.subtitle">{{item.subtitle}}</p>
+              </a>
+            </div>
+          </li>
+        </ng-container>
+      </ul>
+    </div>
+  </div>
+</nav>

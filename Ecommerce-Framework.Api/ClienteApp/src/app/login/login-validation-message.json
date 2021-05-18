@@ -1,0 +1,23 @@
+{
+	"messages": {
+		"username": [
+			{
+				"type": "required",
+				"message": "Login ou CPF é obrigatório."
+			}
+		],
+		"password": [
+			{
+				"type": "required",
+				"message": "Senha é obrigatório."
+			}
+		],
+		"token": [
+			{
+				"type": "required",
+				"message": "Token é obrigatório."
+			}
+		]
+		
+	}
+}

@@ -1,0 +1,14 @@
+<nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+  <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+    <li *ngFor="let item of links" class="breadcrumb-item {{item.active ? 'active': ''}}" aria-current="page">
+      <a *ngIf="item.url" [routerLink]="item.url">
+        <ngb-icon *ngIf="item.icon" [name]="item.icon" size="lg"></ngb-icon>
+        {{item.title}}
+      </a>
+      <span *ngIf="!item.url">
+        <ngb-icon *ngIf="item.icon" [name]="item.icon" size="lg"></ngb-icon>
+        {{item.title}}
+      </span>
+    </li>
+  </ol>
+</nav>
